@@ -1,4 +1,4 @@
-## BlogsCr —— 洛谷博客文章的自动保存
+## BlogsCrl —— 洛谷博客文章的自动保存
 
 [洛谷更新日志](https://www.luogu.com.cn/discuss/223773) 中提到，
 
