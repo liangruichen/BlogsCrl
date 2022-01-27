@@ -8,7 +8,7 @@
 
 这个脚本，可以**在 Windows 下**实现洛谷博客文章的自动下载。
 
-请使用 Python3 编译，确保有 `requests`，`time`，`os`，`re` 库。其中的后三个多半是有的，如果没有 `requests` 库，您可以在 `cmd` 中输入 `pip install requests` 来获得。
+请使用 Python3 编译 `BlogsCr.py`，确保有 `requests`，`time`，`os`，`re` 库。其中的后三个多半是有的，如果没有 `requests` 库，您可以在 `cmd` 中输入 `pip install requests` 来获得。
 
 在代码中，这一段被醒目地标注出来，因为您需要更改这里的信息。
 
