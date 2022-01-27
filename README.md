@@ -53,4 +53,4 @@
 
 ------
 
-如有 Bug 或配置问题，可以洛谷私信联系我。
+如有 Bug 或配置问题，可以洛谷私信联系 @[liangruichen](https://www.luogu.com.cn/user/409236)。
