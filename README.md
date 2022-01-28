@@ -1,4 +1,5 @@
 ## BlogsCrl —— 洛谷博客文章的自动保存
+**声明：通过查询 `robots.txt` 可知，下列爬虫内容是合法的。**  
 
 [洛谷更新日志](https://www.luogu.com.cn/discuss/223773) 中提到，
 
