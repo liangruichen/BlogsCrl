@@ -177,12 +177,12 @@ uid = "xxxxxx"
 client = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ##############################################
 string = "_uid="+uid+";__client_id="+client
-
+##############################################
 headers = {
     "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
     "cookie":string
 }
-
+##############################################
 v = os.getcwd() + "\\Blogs" 
 k = os.path.exists(v)
 if k == False:
