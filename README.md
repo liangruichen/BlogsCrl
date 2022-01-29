@@ -69,3 +69,4 @@ Microsoft Edge:
 2. ~~自动链接（即`<https://xxxxx>`）的 md 会出现问题。~~ fixed on 2022/1/28
 3. ~~爬取带有说明的图片（即 `![xxx](https://xxxxx)`）时会死。~~ fixed on 2022/1/28
 4. ~~特殊 markdown 字符不会被转义。~~ fixed on 2022/1/29
+5. Windows 外的操作系统（如 Linux，Mac）在保存文件时，若博客名称含有特殊字符，会出现问题。
