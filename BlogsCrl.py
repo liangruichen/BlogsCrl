@@ -125,10 +125,22 @@ def ctr3(ct):
     return rpt
     
 
+syst = os.name
+if syst == "nt":
+    syst = "Windows"
+else:
+    syst = "Others"
+spc = ""
+
+if syst == "Windows":
+    spc = "\\/:*?\"<>|"
+else:
+    spc = ":/"
+    
 def fname(st1):
     for i in range(len(st1)):
         x = st1[i]
-        if x == '?' or x == '/' or x == '\\' or x == ':' or x == '>' or x == '\"' or x == '*' or x == '<' or x == '|':
+        if spc.find(x) != -1:
             t = ""
             for j in range(i):
                 t += st1[j]
@@ -188,6 +200,7 @@ k = os.path.exists(v)
 if k == False:
     os.makedirs(v)
 
+
 response = requests.get("https://www.luogu.com.cn",headers=headers)
 response.encoding = 'utf-8'
 s = response.text
@@ -211,7 +224,11 @@ else:
         id = id['users'][0]["name"]
         print("登录失败","uid:",uid,"id:",id)
 
-esc = '\\`*_{}[]()#+-.!'
+esc = ""
+if syst == "Windows":
+    esc = '\\`*_{}[]()#+-.!'
+else:
+    esc = ':/'
 
 url = "https://www.luogu.com.cn/blogAdmin/article/list?pageType=list"
 response = requests.get(url, headers = headers)
@@ -257,6 +274,14 @@ while True:
         response = requests.get(fd, headers = headers)
         response.encoding = 'utf-8'
         t = response.text
+
+        sat = "type=\"text\" placeholder=\"文章分类\""
+        gsat = t.find(sat) + len(sat)
+        gsat = t.find("value=", gsat) + 7
+        gty = ""
+        while t[gsat] != '\"' or t[gsat + 1] != '/' or t[gsat + 2] != '>':
+            gty += t[gsat]
+            gsat += 1
 
         w = t.find("可根据标题自动生成")
         w = t.find("value", w + 1) + 7
@@ -424,7 +449,32 @@ while True:
         for i in range(q):
             ot += ans[i]
         # print(ot)
+        # syst = "Others"
+        if syst == "Others":
+            if nameall[0] == '+':
+                p = "A "
+                for i in range(1, len(nameall)):
+                    p += nameall[i]
+                nameall = p
+            elif nameall[0] == '-':
+                p = "M "
+                for i in range(1, len(nameall)):
+                    p += nameall[i]
+                nameall = p
+            elif nameall[0] == '.':
+                p = "P "
+                for i in range(1, len(nameall)):
+                    p += nameall[i]
+                nameall = p
+        ##############################################
+        nameall = '【' + gty + '】' + nameall
+        ##############################################
+        
         print("Downloading: " + nameall + '\n')
+        
+        ##############################################
+        ot += "\n-----\n分类：" + gty
+        ##############################################
         with open("Blogs\\" + nameall + ".md", 'w+') as f:
             f.write(ot)
         fd = "/blogAdmin/article/edit/"
