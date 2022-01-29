@@ -1,4 +1,5 @@
 ## BlogsCrl —— 洛谷博客文章的自动保存
+
 **声明：通过查询 `robots.txt` 可知，下列爬虫内容是合法的。**  
 
 [洛谷更新日志](https://www.luogu.com.cn/discuss/223773) 中提到，
@@ -17,11 +18,13 @@
 
 ![](https://s4.ax1x.com/2022/01/27/7XdRTU.png)
 
-先登录洛谷，按 F12 或右键打开检查，存储中 `__client_id` 的值即您的 cookie。
+Firefox：先登录洛谷，按 F12 或右键打开检查，存储中 `__client_id` 的值即您的 cookie。
 
 ![](https://s4.ax1x.com/2022/01/27/7XwOuq.png)
 
+Chrome（这里是 Microsoft Edge）：先登录洛谷，按 F12 或右键打开检查，Application 中的 Cookies 内，找到  `__client_id` 的 Value 即您的 cookie。
 
+![](https://s4.ax1x.com/2022/01/29/HSOS8P.png)
 
 **两项信息均需要打上引号。**
 
