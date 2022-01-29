@@ -177,12 +177,12 @@ uid = "xxxxxx"
 client = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ##############################################
 string = "_uid="+uid+";__client_id="+client
-##############################################
+
 headers = {
     "User-Agent":"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:96.0) Gecko/20100101 Firefox/96.0",
     "cookie":string
 }
-##############################################
+
 v = os.getcwd() + "\\Blogs" 
 k = os.path.exists(v)
 if k == False:
@@ -202,7 +202,7 @@ else:
     p = re.search(r"<h2>欢迎回来，(.*?)</h2>",s)
     if p:
         p = re.search(r"target=\"_blank\">(.*?)</a>",s)
-        print("成功登录 " + p.group(1))
+        print("成功登录 " + p.group(1), end = "\n\n")
     else:
         ref = "https://www.luogu.com.cn/api/user/search?keyword="+uid
         response = requests.get(ref,headers=headers)
@@ -211,7 +211,7 @@ else:
         id = id['users'][0]["name"]
         print("登录失败","uid:",uid,"id:",id)
 
-
+esc = '\\`*_{}[]()#+-.!'
 
 url = "https://www.luogu.com.cn/blogAdmin/article/list?pageType=list"
 response = requests.get(url, headers = headers)
@@ -284,7 +284,55 @@ while True:
         ans = ""
         for i in range(l, r):
             ans += t[i]
+        # print(ans)
 
+        lt = rt = img = href = my = my2 = 0
+        while ans.find("<p>", rt + 1) != -1:
+            lt = ans.find("<p>", rt + 1)
+            rt = ans.find("</p>", lt + 1)
+            img = ans.find("<img src=", lt)
+            href = ans.find("<a href=", lt)
+            my = ans.find("$", lt)
+            my2 = ans.find("$$", lt)
+            while my + 1 < len(ans) and ans[my + 1] == '$':
+                my = ans.find("$", my + 2)
+            i = lt + 3
+            while i < rt:
+                if i == img:
+                    i = ans.find("/>", img) + 2
+                    img = ans.find("<img src=", img + 1)
+                if i == href:
+                    i = ans.find("</a>", href) + 4
+                    href = ans.find("<a href=", href + 1)
+                if i == my2:
+                    i = ans.find("$$", my2 + 1) + 2
+                    my2 = ans.find("$$", i)
+                if i == my:
+                    i = ans.find("$", my + 1) + 1
+                    my = ans.find("$", i + 1)
+                    while my + 1 < len(ans) and ans[my + 1] == '$':
+                        my = ans.find("$", my + 2)
+                # print(ans[i], end = "!!!\n")
+                if ans[i] == '\n':
+                    q = ""
+                    for j in range(i):
+                        q += ans[j]
+                    for j in range(i + 1, len(ans)):
+                        q += ans[j]
+                    ans = q
+                    rt -= 1
+                if esc.find(ans[i]) != -1:
+                    q = ""
+                    for j in range(i):
+                        q += ans[j]
+                    q += "\\" + ans[i]
+                    for j in range(i + 1, len(ans)):
+                        q += ans[j]
+                    ans = q
+                    i += 1
+                    rt += 1
+                i += 1
+        # print(ans)
         ans = chg(ans, "<p>", "\n")
         ans = chg(ans, "&lt;", "<")
         ans = chg(ans, "&gt;", ">")
@@ -307,7 +355,7 @@ while True:
         ans = chg(ans, "<strong>", "**")
         ans = chg(ans, "</strong>", "**")
         ans = chg(ans, "<hr />", "\n----\n")
-        ans = chg(ans, "<br />", "")
+        ans = chg(ans, "<br />", "\n")
         ans = chg(ans, "<pre><code>", "```\n")
         ans = chg(ans, "</code></pre>", "\n```")
         ans = chg(ans, "<code>", "`")
@@ -315,6 +363,8 @@ while True:
         ans = chg(ans, "</tbody>", "")
         ans = chg(ans, "</table>", "")
         ans = chg(ans, "<table>", "")
+        ans = chg(ans, "<em>", "*")
+        ans = chg(ans, "</em>", "*")
         ans = chg(ans, "$$", "\n$$")
         ans = ans.replace("\u200b", " ")
         while ans.find("<pre><code class=\"language-") != -1:
@@ -354,11 +404,15 @@ while True:
             un = ""
             for i in range(l, r):
                 un += ans[i]
-            r2 = ans.find("alt=\"\"", r)
+            state = ""
+            k = r + 7
+            while ans[k] != '\"':
+                state += ans[k]
+                k += 1
             q = ""
-            for i in range(l - len(w), r2 + 9):
+            for i in range(l - len(w), k + 4):
                 q += ans[i]
-            ans = chg(ans, q, "![](" + un + ")")
+            ans = chg(ans, q, "![" + state + "](" + un + ")")
 
         while ans.find("<blockquote>") != -1:
             ans = wist(ans, ans.find("<blockquote>"))
