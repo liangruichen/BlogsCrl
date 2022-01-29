@@ -224,11 +224,7 @@ else:
         id = id['users'][0]["name"]
         print("登录失败","uid:",uid,"id:",id)
 
-esc = ""
-if syst == "Windows":
-    esc = '\\`*_{}[]()#+-.!'
-else:
-    esc = ':/'
+esc = '\\`*_{}[]()#+-.!'
 
 url = "https://www.luogu.com.cn/blogAdmin/article/list?pageType=list"
 response = requests.get(url, headers = headers)
