@@ -182,7 +182,110 @@ def wist(ct, bg):
     for i in range(q + 13, len(ct)):
         rta += ct[i]
     return rta
-            
+
+
+def wist2(ct):
+    li = ct.find("<ul>")
+    la = ct.find("<ol>")
+    l = 0
+    opt = []
+    lop = 0
+    if li == -1:
+        l = la
+        opt.append("1. ")
+    elif la == -1:
+        l = li
+        opt.append("- ")
+    else:
+        if li > la:
+            l = la
+            opt.append("1. ")
+        else:
+            l = li
+            opt.append("- ")
+    bg = l + 4
+    cnt, q = 1, 0
+    now = ""
+    rta = ""
+    while cnt > 0:
+        cot = ""
+        cg1 = ct.find("</ul>", bg)
+        cg2 = ct.find("<ul>", bg)
+        cg3 = ct.find("</ol>", bg)
+        cg4 = ct.find("<ol>", bg)
+        if cg1 == -1:
+            cg1 = len(ct) + 114514
+        if cg3 == -1:
+            cg3 = len(ct) + 114514
+
+        # print(ct[bg], end = '??\n')
+
+        pic = ct.find("![", bg)
+        lnk = ct.find("[", bg)
+        cod = ct.find("```", bg)
+
+        if pic != -1 and bg == pic:
+            pr = ct.find(")", pic)
+            for i in range(cnt - 1):
+                now += '\t'
+            for i in range(pic, pr + 2):
+                now += ct[i]
+            bg = pr + 1
+            continue
+        if lnk != -1 and bg == lnk:
+            pr = ct.find(")", lnk)
+            for i in range(cnt - 1):
+                now += '\t'
+            for i in range(lnk, pr + 2):
+                now += ct[i]
+            bg = pr + 1
+            continue
+        if cod != -1 and bg == cod:
+            pr = ct.find("```", cod + 4)
+            for i in range(cnt - 1):
+                now += '\t'
+            for i in range(cod, pr + 4):
+                now += ct[i]
+            bg = pr + 3
+            continue
+        if bg >= len(ct):
+            break
+
+        while ct[bg] != '\n':
+            cot += ct[bg]
+            bg += 1
+        while ct[bg] == '\n':
+            bg += 1
+        if cot != "":
+            for i in range(cnt - 1):
+                now += '\t'
+            now += opt[lop] + cot + '\n'
+        if bg == cg1 or bg == cg3:
+            cnt -= 1
+            del(opt[lop])
+            lop -= 1
+            bg += 5
+            if cg1 > cg3:
+                q = cg3
+            else:
+                q = cg1
+        elif bg == cg2:
+            cnt += 1
+            opt.append("- ")
+            lop += 1
+            bg += 4
+        elif bg == cg4:
+            cnt += 1
+            opt.append("1. ")
+            lop += 1
+            bg += 4
+    
+    for i in range(l):
+        rta += ct[i]
+    rta += now
+    for i in range(q + 5, len(ct)):
+        rta += ct[i]
+    return rta
             
 ##############################################
 uid = "xxxxxx"
@@ -296,7 +399,6 @@ while True:
         r = t.find(" - " + blogname, l + 1)
         for i in range(l, r):
             nameall += t[i]
-        nameall = fname(nameall)
 
         n = "<div id=\"article-content\">"
         l = t.find(n) + len(n)
@@ -305,12 +407,14 @@ while True:
         ans = ""
         for i in range(l, r):
             ans += t[i]
+
         # print(ans)
 
-        lt = rt = img = href = my = my2 = 0
+        lt = rt = img = href = cod = my = my2 = 0
         while ans.find("<p>", rt + 1) != -1:
             lt = ans.find("<p>", rt + 1)
             rt = ans.find("</p>", lt + 1)
+            cod = ans.find("<code>", lt)
             img = ans.find("<img src=", lt)
             href = ans.find("<a href=", lt)
             my = ans.find("$", lt)
@@ -322,6 +426,9 @@ while True:
                 if i == img:
                     i = ans.find("/>", img) + 2
                     img = ans.find("<img src=", img + 1)
+                if i == cod:
+                    i = ans.find("</code>", cod) + 7
+                    cod = ans.find("<code>", i)
                 if i == href:
                     i = ans.find("</a>", href) + 4
                     href = ans.find("<a href=", href + 1)
@@ -333,7 +440,7 @@ while True:
                     my = ans.find("$", i + 1)
                     while my + 1 < len(ans) and ans[my + 1] == '$':
                         my = ans.find("$", my + 2)
-                # print(ans[i], end = "!!!\n")
+                # print(str(img) + ": " + ans[img] + '   ' + str(i) + ': ' + ans[i], end = "!!!\n")
                 if ans[i] == '\n':
                     q = ""
                     for j in range(i):
@@ -341,7 +448,13 @@ while True:
                     for j in range(i + 1, len(ans)):
                         q += ans[j]
                     ans = q
+                    i -= 1
                     rt -= 1
+                    img -= 1
+                    href -= 1
+                    cod -= 1
+                    my -= 1
+                    my2 -= 1
                 if esc.find(ans[i]) != -1:
                     q = ""
                     for j in range(i):
@@ -352,6 +465,11 @@ while True:
                     ans = q
                     i += 1
                     rt += 1
+                    img += 1
+                    href += 1
+                    cod += 1
+                    my += 1
+                    my2 += 1
                 i += 1
         # print(ans)
         ans = chg(ans, "<p>", "\n")
@@ -386,20 +504,17 @@ while True:
         ans = chg(ans, "<table>", "")
         ans = chg(ans, "<em>", "*")
         ans = chg(ans, "</em>", "*")
-        ans = chg(ans, "$$", "\n$$")
+        ans = chg(ans, "$$", "\n$$\n")
         ans = ans.replace("\u200b", " ")
         while ans.find("<pre><code class=\"language-") != -1:
             ans = chg2(ans)
-        while ans.find("<ol>") != -1:
-            ans = ctr(ans, "<ol>", "1. ")
-        while ans.find("<ul>") != -1:
-            ans = ctr(ans, "<ul>", "- ")
         while ans.find("<thead>") != -1:
             ans = ctr2(ans, "<thead>")
         while ans.find("<tr>") != -1:
             ans = ctr3(ans)
         ans = chg(ans, "&quot;", "\"")
         ans = chg(ans, "</li>", "")
+        ans = chg(ans, "<li>", "")
         w = "<a href=\""
         while ans.find(w) != -1:
             l = ans.find(w) + len(w)
@@ -437,6 +552,14 @@ while True:
 
         while ans.find("<blockquote>") != -1:
             ans = wist(ans, ans.find("<blockquote>"))
+
+        # print(ans)
+
+        while ans.find("<ol>") != -1 or ans.find("<ul>") != -1:
+            ans = wist2(ans)
+
+        # print(ans)
+        
         ans = chg(ans, "\n", "  \n")
 
         q = ans.find("<>&# ## ### #### ##### ###### ~~~~****  ")
@@ -471,6 +594,8 @@ while True:
         ##############################################
         ot += "\n-----\n分类：" + gty
         ##############################################
+        
+        nameall = fname(nameall)
         with open("Blogs\\" + nameall + ".md", 'w+') as f:
             f.write(ot)
         fd = "/blogAdmin/article/edit/"
