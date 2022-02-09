@@ -289,7 +289,7 @@ def wist2(ct):
             
 ##############################################
 uid = "xxxxxx"
-client = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+client = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ##############################################
 string = "_uid="+uid+";__client_id="+client
 
@@ -409,6 +409,7 @@ while True:
             ans += t[i]
 
         # print(ans)
+        ans = ans.replace("$$", "$$  ")
 
         lt = rt = img = href = cod = my = my2 = 0
         while ans.find("<p>", rt + 1) != -1:
@@ -433,7 +434,7 @@ while True:
                     i = ans.find("</a>", href) + 4
                     href = ans.find("<a href=", href + 1)
                 if i == my2:
-                    i = ans.find("$$", my2 + 1) + 2
+                    i = ans.find("$$", my2 + 2) + 2
                     my2 = ans.find("$$", i)
                 if i == my:
                     i = ans.find("$", my + 1) + 1
