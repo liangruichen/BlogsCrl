@@ -597,7 +597,7 @@ while True:
         ##############################################
         
         nameall = fname(nameall)
-        with open("Blogs\\" + nameall + ".md", 'w+') as f:
+        with open("Blogs\\" + nameall + ".md", 'w+', encoding = 'utf-8') as f:
             f.write(ot)
         fd = "/blogAdmin/article/edit/"
         time.sleep(7)
