@@ -400,7 +400,7 @@ while True:
         for i in range(l, r):
             nameall += t[i]
 
-        n = "<div id=\"article-content\">"
+        n = "id=\"article-content\">"
         l = t.find(n) + len(n)
         r = t.find("</div>", l + 1)
 
